@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/api-gateways/" />
+  <Folder Name="/api-gateways/Gateway/">
+    <Project Path="api-gateways/Gateway/Gateway.API/Gateway.API.csproj" Id="8d7d63c6-9602-4d48-9cb3-f354218efa7a" />
+  </Folder>
+  <Folder Name="/building-blocks/" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/AuthService/">
+    <Project Path="src/AuthService/AuthService.API/AuthService.API.csproj" Id="89d1f9ab-49d2-4a4e-a12e-b8458c0b06a3" />
+    <Project Path="src/AuthService/AuthService.Application/AuthService.Application.csproj" Id="cf484abc-33c5-4b58-aefc-60ab00aa898b" />
+    <Project Path="src/AuthService/AuthService.Domain/AuthService.Domain.csproj" Id="6e1d5549-ecae-4383-bb1f-be1b93327120" />
+    <Project Path="src/AuthService/AuthService.Infrastructure/AuthService.Infrastructure.csproj" Id="8a125dce-bd03-46e4-92dd-eb361d9ca5e4" />
+  </Folder>
+  <Folder Name="/src/LogService/">
+    <Project Path="src/LogService/LogService.API/LogService.API.csproj" Id="16ca721d-7d28-455b-a6c0-ce2ccd941ff0" />
+    <Project Path="src/LogService/LogService.Application/LogService.Application.csproj" Id="6874f8ab-3729-4bf5-9ed8-e14b2d4cb219" />
+    <Project Path="src/LogService/LogService.Domain/LogService.Domain.csproj" Id="410d03b0-604e-47d6-936a-5a1cfd4fcc26" />
+    <Project Path="src/LogService/LogService.Infrastructure/LogService.Infrastructure.csproj" Id="75c73f35-c601-432b-94a7-36cf93485272" />
+  </Folder>
+  <Folder Name="/src/ProductService/">
+    <Project Path="src/ProductService/ProductService.API/ProductService.API.csproj" Id="61754722-909e-4a8e-aece-a1dea586beef" />
+    <Project Path="src/ProductService/ProductService.Application/ProductService.Application.csproj" Id="9207e108-78e6-4f40-97cd-c18fef6483dd" />
+    <Project Path="src/ProductService/ProductService.Domain/ProductService.Domain.csproj" Id="ed8bcfbc-a356-4871-aaa2-c1040d849581" />
+    <Project Path="src/ProductService/ProductService.Infrastructure/ProductService.Infrastructure.csproj" Id="a40376b7-9b62-4a1a-bddf-ee59a4a3c988" />
+  </Folder>
+</Solution>
