@@ -52,8 +52,8 @@ services:
   # ---------------------------------------------------------------------------
   api-gateway:
     build:
-      context: ./api-gateways/Gateway/Gateway.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /api-gateways/Gateway/Gateway.API/Dockerfile
     image: ${REGISTRY:-local}/api-gateway:${IMAGE_TAG:-latest}
     container_name: api-gateway
     restart: unless-stopped
@@ -92,8 +92,8 @@ services:
   # ---------------------------------------------------------------------------
   auth-service:
     build:
-      context: ./src/AuthService/AuthService.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /src/AuthService/AuthService.API/Dockerfile
     image: ${REGISTRY:-local}/auth-service:${IMAGE_TAG:-latest}
     container_name: auth-service
     restart: unless-stopped
@@ -102,7 +102,7 @@ services:
     env_file:
       - .env
     environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=AuthDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
+      - ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=AuthDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
     networks:
       - backend_net
     depends_on:
@@ -120,8 +120,8 @@ services:
   # ---------------------------------------------------------------------------
   product-service:
     build:
-      context: ./src/ProductService/ProductService.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /src/ProductService/ProductService.API/Dockerfile
     image: ${REGISTRY:-local}/product-service:${IMAGE_TAG:-latest}
     container_name: product-service
     restart: unless-stopped
@@ -156,8 +156,8 @@ services:
   # ---------------------------------------------------------------------------
   log-service:
     build:
-      context: ./src/LogService/LogService.API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /src/LogService/LogService.API/Dockerfile
     image: ${REGISTRY:-local}/log-service:${IMAGE_TAG:-latest}
     container_name: log-service
     restart: unless-stopped
@@ -267,7 +267,6 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VHOST}
-      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=${RABBITMQ_MEMORY_LIMIT}
     expose:
       - "5672"
     ports:
