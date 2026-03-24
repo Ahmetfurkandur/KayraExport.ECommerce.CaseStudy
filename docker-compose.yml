@@ -103,6 +103,12 @@ services:
       - .env
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=AuthDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - JWT_ACCESS_EXPIRY_MIN=${JWT_ACCESS_EXPIRY_MIN}
+      - JWT_REFRESH_EXPIRY_DAYS=${JWT_REFRESH_EXPIRY_DAYS}
+
     networks:
       - backend_net
     depends_on:
