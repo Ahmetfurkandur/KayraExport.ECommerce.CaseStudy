@@ -4,6 +4,11 @@
     <Project Path="api-gateways/Gateway/Gateway.API/Gateway.API.csproj" Id="8d7d63c6-9602-4d48-9cb3-f354218efa7a" />
   </Folder>
   <Folder Name="/building-blocks/" />
+  <Folder Name="/Solution Items/">
+    <File Path=".env" />
+    <File Path=".env.example" />
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/AuthService/">
     <Project Path="src/AuthService/AuthService.API/AuthService.API.csproj" Id="89d1f9ab-49d2-4a4e-a12e-b8458c0b06a3" />
