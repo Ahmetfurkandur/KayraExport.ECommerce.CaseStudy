@@ -11,7 +11,7 @@ namespace AuthService.Infrastructure
         public AuthDbContext CreateDbContext(string[] args)
         {
             // 1. Mevcut dizini al
-            string path = Directory.GetCurrentDirectory();
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "../AuthService.API");
 
             // 2. Yapılandırma oluştur (appsettings + environment variables)
             IConfigurationRoot configuration = new ConfigurationBuilder()
