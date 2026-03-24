@@ -12,6 +12,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/LogService/LogService.API/LogService.API.csproj", "src/LogService/LogService.API/"]
+COPY ["src/LogService/LogService.Application/LogService.Application.csproj", "src/LogService/LogService.Application/"]
+COPY ["src/LogService/LogService.Domain/LogService.Domain.csproj", "src/LogService/LogService.Domain/"]
+COPY ["src/LogService/LogService.Infrastructure/LogService.Infrastructure.csproj", "src/LogService/LogService.Infrastructure/"]
+COPY ["src/AuthService/AuthService.Application/AuthService.Application.csproj", "src/AuthService/AuthService.Application/"]
+COPY ["src/AuthService/AuthService.Domain/AuthService.Domain.csproj", "src/AuthService/AuthService.Domain/"]
 RUN dotnet restore "./src/LogService/LogService.API/LogService.API.csproj"
 COPY . .
 WORKDIR "/src/src/LogService/LogService.API"
