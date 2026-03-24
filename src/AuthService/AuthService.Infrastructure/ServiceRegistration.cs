@@ -9,7 +9,7 @@ namespace AuthService.Infrastructure
     {
         public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AuthDbContext>(c => c.UseSqlServer(configuration["CONNECTION_STRING"]));
+            services.AddDbContext<AuthDbContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }
