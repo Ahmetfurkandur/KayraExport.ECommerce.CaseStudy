@@ -1,3 +1,4 @@
+using AuthService.Application;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.Contexts;
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
