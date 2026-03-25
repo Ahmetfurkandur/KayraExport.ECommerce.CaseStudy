@@ -38,6 +38,7 @@ namespace AuthService.API.Controllers
         [HttpPost("logout")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Logout(RevokeTokenCommandRequest request)
         {
@@ -47,6 +48,7 @@ namespace AuthService.API.Controllers
         [HttpPost("refresh")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RefreshToken(RenewAccessTokenCommandRequest request)
         {
