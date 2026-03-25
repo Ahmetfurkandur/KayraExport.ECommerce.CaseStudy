@@ -19,7 +19,7 @@ namespace AuthService.Application.Features.Users.Commands.RevokeTokenCommand
 
         public async Task<RevokeTokenCommandResponse> Handle(RevokeTokenCommandRequest request, CancellationToken cancellationToken)
         {
-            var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken);
+            var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken && request.RefreshTokenExpiry > DateTime.UtcNow, cancellationToken);
 
             if (user == null)
             {

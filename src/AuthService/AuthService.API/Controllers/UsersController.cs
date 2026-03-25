@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.Features.Users.Commands.LoginCommand;
 using AuthService.Application.Features.Users.Commands.RegisterUserCommand;
+using AuthService.Application.Features.Users.Commands.RenewAccessTokenCommand;
 using AuthService.Application.Features.Users.Commands.RevokeTokenCommand;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +40,15 @@ namespace AuthService.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Logout(RevokeTokenCommandRequest request)
+        {
+            return Ok(await mediator.Send(request));
+        }
+
+        [HttpPost("refresh")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> RefreshToken(RenewAccessTokenCommandRequest request)
         {
             return Ok(await mediator.Send(request));
         }
