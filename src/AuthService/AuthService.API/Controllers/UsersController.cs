@@ -1,4 +1,5 @@
-﻿using AuthService.Application.Features.Users.Commands.RegisterUserCommand;
+﻿using AuthService.Application.Features.Users.Commands.LoginCommand;
+using AuthService.Application.Features.Users.Commands.RegisterUserCommand;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,12 @@ namespace AuthService.API.Controllers
 
         [HttpPost("/register")]
         public async Task<IActionResult> RegisterUser(RegisterUserCommandRequest request)
+        {
+            return Ok(await mediator.Send(request));
+        }
+
+        [HttpPost("/login")]
+        public async Task<IActionResult> Login(LoginCommandRequest request)
         {
             return Ok(await mediator.Send(request));
         }
