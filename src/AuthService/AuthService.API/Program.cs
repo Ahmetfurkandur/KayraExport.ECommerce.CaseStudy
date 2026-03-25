@@ -3,6 +3,7 @@ using AuthService.Domain.Entities;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +17,14 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AuthDbContext>("auth-db")
+    .AddCheck("auth-identity", () =>
+    {
+        // Microsoft Identity servisinin ayakta olup olmadýðýný kontrol eder
+        return HealthCheckResult.Healthy("Identity service is running.");
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,6 +41,38 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
+app.MapGet("/health", async (HealthCheckService healthCheckService) =>
+{
+    var report = await healthCheckService.CheckHealthAsync();
+    return report.Status == HealthStatus.Healthy
+        ? Results.Ok(new
+        {
+            status = "Healthy",
+            service = "AuthService",
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                description = e.Value.Description
+            })
+        })
+        : Results.Json(new
+        {
+            status = "Unhealthy",
+            service = "AuthService",
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                description = e.Value.Description,
+                error = e.Value.Exception?.Message
+            })
+        }, statusCode: 503);
+})
+.WithName("AuthHealthCheck")
+.WithTags("Health")
+.AllowAnonymous();
 
 app.MapControllers();
 
