@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using AuthService.Application;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure;
@@ -5,6 +6,20 @@ using AuthService.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
 
 // Add services to the container.
 builder.Services.AddInfrastructureServices(builder.Configuration);

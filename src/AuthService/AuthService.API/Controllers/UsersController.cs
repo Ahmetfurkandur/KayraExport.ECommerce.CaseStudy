@@ -1,4 +1,5 @@
-﻿using AuthService.Application.Features.Users.Commands.LoginCommand;
+﻿using Asp.Versioning;
+using AuthService.Application.Features.Users.Commands.LoginCommand;
 using AuthService.Application.Features.Users.Commands.RegisterUserCommand;
 using AuthService.Application.Features.Users.Commands.RenewAccessTokenCommand;
 using AuthService.Application.Features.Users.Commands.RevokeTokenCommand;
@@ -8,8 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.API.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IMediator mediator;
