@@ -53,7 +53,7 @@ services:
   api-gateway:
     build:
       context: .
-      dockerfile: /api-gateways/Gateway/Gateway.API/Dockerfile
+      dockerfile: api-gateways/Gateway/Gateway.API/Dockerfile
     image: ${REGISTRY:-local}/api-gateway:${IMAGE_TAG:-latest}
     container_name: api-gateway
     restart: unless-stopped
@@ -96,7 +96,7 @@ services:
   auth-service:
     build:
       context: .
-      dockerfile: /src/AuthService/AuthService.API/Dockerfile
+      dockerfile: src/AuthService/AuthService.API/Dockerfile
     image: ${REGISTRY:-local}/auth-service:${IMAGE_TAG:-latest}
     container_name: auth-service
     restart: unless-stopped
@@ -105,6 +105,7 @@ services:
     env_file:
       - .env
     environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=AuthDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JWT_ISSUER=${JWT_ISSUER}
@@ -130,7 +131,7 @@ services:
   product-service:
     build:
       context: .
-      dockerfile: /src/ProductService/ProductService.API/Dockerfile
+      dockerfile: src/ProductService/ProductService.API/Dockerfile
     image: ${REGISTRY:-local}/product-service:${IMAGE_TAG:-latest}
     container_name: product-service
     restart: unless-stopped
@@ -139,6 +140,7 @@ services:
     env_file:
       - .env
     environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ProductDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - Redis__ConnectionString=redis:6379,password=${REDIS_PASSWORD},ssl=False,abortConnect=False
@@ -166,7 +168,7 @@ services:
   log-service:
     build:
       context: .
-      dockerfile: /src/LogService/LogService.API/Dockerfile
+      dockerfile: src/LogService/LogService.API/Dockerfile
     image: ${REGISTRY:-local}/log-service:${IMAGE_TAG:-latest}
     container_name: log-service
     restart: unless-stopped
@@ -175,6 +177,7 @@ services:
     env_file:
       - .env
     environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=LogDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - RabbitMQ__Host=rabbitmq

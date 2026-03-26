@@ -29,4 +29,7 @@
     <Project Path="src/ProductService/ProductService.Domain/ProductService.Domain.csproj" Id="ed8bcfbc-a356-4871-aaa2-c1040d849581" />
     <Project Path="src/ProductService/ProductService.Infrastructure/ProductService.Infrastructure.csproj" Id="a40376b7-9b62-4a1a-bddf-ee59a4a3c988" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
