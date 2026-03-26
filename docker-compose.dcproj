@@ -8,6 +8,8 @@
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>api-gateway</DockerServiceName>
     <DockerfileRunArguments>-e "ASPNETCORE_URLS=http://+:8080"</DockerfileRunArguments>
+    <DockerPublishLocally>False</DockerPublishLocally>
+    <DockerDevelopmentMode>Regular</DockerDevelopmentMode>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

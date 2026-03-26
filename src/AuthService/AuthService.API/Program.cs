@@ -1,10 +1,13 @@
 using Asp.Versioning;
+using AuthService.API.Filters;
 using AuthService.Application;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.Contexts;
+using AuthService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApiVersioning(options =>
@@ -33,18 +36,47 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    };
+});
+
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AuthDbContext>("auth-db")
     .AddCheck("auth-identity", () =>
     {
-        // Microsoft Identity servisinin ayakta olup olmadýðýný kontrol eder
-        return HealthCheckResult.Healthy("Identity service is running.");
+        // Auth servisinin ayakta olup olmadýðýný kontrol eder
+        return HealthCheckResult.Healthy("Auth service is running.");
     });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth Service", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT token giriniz"
+    });
+
+    options.OperationFilter<AuthorizeCheckOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -90,5 +122,11 @@ app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 .AllowAnonymous();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await DbInitializer.SeedRolesAsync(roleManager);
+}
 
 app.Run();

@@ -22,8 +22,13 @@ namespace AuthService.Application.Features.Users.Commands.RegisterUserCommand
 
         public async Task<RegisterUserCommandResponse> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
         {
-            if (userManager.FindByEmailAsync(request.Email) is null)
+            if (await userManager.FindByEmailAsync(request.Email) is not null)
                 throw new InvalidOperationException($"{request.Email} adresi zaten kullanılıyor!");
+
+            if (await userManager.FindByNameAsync(request.FullName) is not null)
+            {
+                throw new ValidationException($"{request.FullName} kullanıcı adı zaten kullanılıyor!");
+            }
 
             var user = new AppUser
             {
@@ -36,7 +41,7 @@ namespace AuthService.Application.Features.Users.Commands.RegisterUserCommand
             if (!result.Succeeded)
                 throw new ValidationException(result.Errors.First().Description);
 
-            await userManager.AddToRoleAsync(user, "User");
+            await userManager.AddToRoleAsync(user, "USER");
 
             return new RegisterUserCommandResponse()
             {

@@ -17,17 +17,18 @@ namespace AuthService.Application.Features.Users.Commands.RenewAccessTokenComman
         private readonly IConfiguration configuration;
 
 
-        public RenewAccessTokenCommandHandler(UserManager<AppUser> userManager, ILogger<RenewAccessTokenCommandHandler> logger, ITokenService tokenService)
+        public RenewAccessTokenCommandHandler(UserManager<AppUser> userManager, ILogger<RenewAccessTokenCommandHandler> logger, ITokenService tokenService, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.logger = logger;
             this.tokenService = tokenService;
+            this.configuration = configuration;
         }
         public async Task<RenewAccessTokenCommandResponse> Handle(RenewAccessTokenCommandRequest request, CancellationToken cancellationToken)
         {
             var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken && request.RefreshTokenExpiry > DateTime.UtcNow, cancellationToken: cancellationToken);
 
-            if (user is null || !string.IsNullOrEmpty(user.RefreshToken) || request.RefreshTokenExpiry < DateTime.UtcNow)
+            if (user is null || !string.IsNullOrEmpty(user.RefreshToken) || user.RefreshTokenExpiry < DateTime.UtcNow)
             {
                 throw new SecurityTokenException("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.");
             }
