@@ -80,9 +80,9 @@ services:
       auth-service:
         condition: service_healthy
       product-service:
-        condition: service_healthy
+        condition: service_started
       log-service:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -155,12 +155,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+    #   start_period: 30s
 
   # ---------------------------------------------------------------------------
   # LOG MICROSERVICE
@@ -192,12 +192,12 @@ services:
         condition: service_healthy
       seq:
         condition: service_started
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 20s
 
   # ===========================================================================
   # BACKING SERVICES (12FA IV)
