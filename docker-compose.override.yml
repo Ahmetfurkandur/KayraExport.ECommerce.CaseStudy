@@ -1,0 +1,28 @@
+# =============================================================================
+# Docker Compose Override — Geliştirme Ortamı (Development)
+# =============================================================================
+# Bu dosya "docker compose up" çalıştırıldığında otomatik olarak merge edilir.
+# Sadece geliştirme ortamına özgü ayarları içerir.
+#
+# 12-Factor App:
+#   III. Config      → Dev sertifika şifresi ve yollar .env'den okunur
+#   X.   Dev/Prod    → Override dosyası ile ortam farkı izole edilir
+#
+# Cross-Platform:
+#   Windows ve macOS farkı sadece .env dosyasındaki DEV_CERT_PATH ile
+#   yönetilir. Compose dosyası her iki platformda aynı kalır.
+#
+# NOT: Bu dosya git'e commit edilebilir (hassas veri içermez, şifre .env'dedir).
+#      Prod ortamında bu dosya yerine docker-compose.prod.yml kullanılır.
+# =============================================================================
+
+services:
+
+  api-gateway:
+    environment:
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${DEV_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ${DEV_CERT_PATH}:/https:ro
