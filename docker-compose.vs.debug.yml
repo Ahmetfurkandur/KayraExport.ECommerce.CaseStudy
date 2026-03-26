@@ -1,0 +1,25 @@
+# =============================================================================
+# Visual Studio Debug Override
+# =============================================================================
+# VS debug modunda DistrolessHelper uygulamayı hemen başlatmaz;
+# debugger attach olana kadar bekler. Bu nedenle healthcheck'ler
+# başarısız olur ve depends_on: service_healthy koşulları kilitleme yapar.
+# Bu dosya healthcheck'leri devre dışı bırakır ve koşulları gevşetir.
+# =============================================================================
+
+services:
+
+  auth-service:
+    healthcheck:
+      disable: true
+
+  api-gateway:
+    healthcheck:
+      disable: true
+    depends_on:
+      auth-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+      log-service:
+        condition: service_started

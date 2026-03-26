@@ -28,7 +28,9 @@ namespace AuthService.Application.Features.Users.Commands.RenewAccessTokenComman
         {
             var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken && request.RefreshTokenExpiry > DateTime.UtcNow, cancellationToken: cancellationToken);
 
-            if (user is null || !string.IsNullOrEmpty(user.RefreshToken) || user.RefreshTokenExpiry < DateTime.UtcNow)
+
+
+            if (user is null || string.IsNullOrEmpty(user.RefreshToken))
             {
                 throw new SecurityTokenException("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.");
             }

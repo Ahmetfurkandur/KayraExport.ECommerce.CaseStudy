@@ -10,9 +10,13 @@
     <DockerfileRunArguments>-e "ASPNETCORE_URLS=http://+:8080"</DockerfileRunArguments>
     <DockerPublishLocally>False</DockerPublishLocally>
     <DockerDevelopmentMode>Regular</DockerDevelopmentMode>
+    <AdditionalComposeFilePaths>docker-compose.vs.debug.yml</AdditionalComposeFilePaths>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
+      <DependentUpon>docker-compose.yml</DependentUpon>
+    </None>
+    <None Include="docker-compose.vs.debug.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
