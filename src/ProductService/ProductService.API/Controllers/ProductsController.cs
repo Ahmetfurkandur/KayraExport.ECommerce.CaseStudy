@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Features.Products.Commands.CreateProductCommand;
+using ProductService.Application.Features.Products.Queries.ListProductsQuery;
 
 namespace ProductService.API.Controllers
 {
@@ -30,6 +31,14 @@ namespace ProductService.API.Controllers
         public async Task<IActionResult> CreateProduct(CreateProductCommandRequest createProductCommandRequest)
         {
             return Ok(await mediator.Send(createProductCommandRequest));
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            return Ok(await mediator.Send(new ListProductsQueryRequest()));
         }
     }
 }

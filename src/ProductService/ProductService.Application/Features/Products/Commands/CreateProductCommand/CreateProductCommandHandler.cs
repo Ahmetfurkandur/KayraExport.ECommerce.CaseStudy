@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using ProductService.Application.Interfaces.Repositories.Products;
 using ProductService.Domain.Entities;
@@ -9,11 +10,13 @@ namespace ProductService.Application.Features.Products.Commands.CreateProductCom
     {
         private readonly IProductCommandRepository commandRepository;
         private readonly ILogger<CreateProductCommandHandler> logger;
+        private readonly IDistributedCache cache;
 
-        public CreateProductCommandHandler(IProductCommandRepository commandRepository, ILogger<CreateProductCommandHandler> logger)
+        public CreateProductCommandHandler(IProductCommandRepository commandRepository, ILogger<CreateProductCommandHandler> logger, IDistributedCache cache)
         {
             this.commandRepository = commandRepository;
             this.logger = logger;
+            this.cache = cache;
         }
 
         public async Task<CreateProductCommandResponse> Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
@@ -34,6 +37,8 @@ namespace ProductService.Application.Features.Products.Commands.CreateProductCom
             {
                 logger.LogInformation("Product {Id} added successfully", product);
             }
+
+            await cache.RemoveAsync("products:all", cancellationToken);
 
             return new()
             {
