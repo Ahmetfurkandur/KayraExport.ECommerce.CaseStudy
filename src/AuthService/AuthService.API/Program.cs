@@ -36,25 +36,11 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-    options.Events.OnRedirectToAccessDenied = context =>
-    {
-        context.Response.StatusCode = 403;
-        return Task.CompletedTask;
-    };
-});
-
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AuthDbContext>("auth-db")
     .AddCheck("auth-identity", () =>
     {
-        // Auth servisinin ayakta olup olmadýðýný kontrol eder
+        // Auth servisinin ayakta olup olmadï¿½ï¿½ï¿½nï¿½ kontrol eder
         return HealthCheckResult.Healthy("Auth service is running.");
     });
 
@@ -86,8 +72,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseAuthorization();
 
 app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 {
