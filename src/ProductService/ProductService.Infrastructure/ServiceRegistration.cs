@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductService.Application.Interfaces.Repositories.Products;
@@ -12,6 +13,18 @@ namespace ProductService.Infrastructure
         public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ProductDbContext>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(configuration["RabbitMQ:Host"], "/", h =>
+                    {
+                        h.Username(configuration["RABBITMQ_USER"]);
+                        h.Password(configuration["RABBITMQ_PASSWORD"]);
+                    });
+                });
+            });
 
             services.AddScoped<IProductCommandRepository, ProductCommandRepository>();
             services.AddScoped<IProductQueryRepository, ProductQueryRepository>();

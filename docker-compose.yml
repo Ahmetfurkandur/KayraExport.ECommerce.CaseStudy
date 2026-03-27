@@ -145,6 +145,8 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ProductDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - Redis__ConnectionString=redis:6379,password=${REDIS_PASSWORD},ssl=False,abortConnect=False
       - RabbitMQ__Host=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - RabbitMQ__Port=5672
     networks:
       - backend_net

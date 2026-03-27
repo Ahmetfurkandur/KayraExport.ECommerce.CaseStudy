@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using ProductService.Application.Interfaces.Repositories.Products;
+using ProductService.Domain.Events;
 
 namespace ProductService.Application.Features.Products.Commands.UpdateProductCommand
 {
@@ -11,13 +13,14 @@ namespace ProductService.Application.Features.Products.Commands.UpdateProductCom
         private readonly IProductQueryRepository queryRepository; //change tracker ile update yapmak için IProductQueryRepository'yi inject ediyoruz
         private readonly ILogger<UpdateProductCommandHandler> logger;
         private readonly IDistributedCache cache;
-
-        public UpdateProductCommandHandler(IProductCommandRepository commandRepository, IProductQueryRepository queryRepository, ILogger<UpdateProductCommandHandler> logger, IDistributedCache cache)
+        private readonly IPublishEndpoint publishEndpoint;
+        public UpdateProductCommandHandler(IProductCommandRepository commandRepository, IProductQueryRepository queryRepository, ILogger<UpdateProductCommandHandler> logger, IDistributedCache cache, IPublishEndpoint publishEndpoint)
         {
             this.commandRepository = commandRepository;
             this.queryRepository = queryRepository;
             this.logger = logger;
             this.cache = cache;
+            this.publishEndpoint = publishEndpoint;
         }
 
         public async Task<UpdateProductCommandResponse> Handle(UpdateProductCommandRequest request, CancellationToken cancellationToken)
@@ -40,7 +43,11 @@ namespace ProductService.Application.Features.Products.Commands.UpdateProductCom
 
             if (result > 0)
             {
-                logger.LogInformation("Product {Id} added successfully", product); //TODO: event fırlat
+                logger.LogInformation("Product {Id} added successfully", product);
+                //Task'ta belirtilen açıklamaya göre yalnızca event fırlatıyorum, Consumer eklemiyorum. Diğer Mikro servisin Consumer'ı çalıştığı anda consume eder.
+                await publishEndpoint.Publish(new ProductUpdatedEvent(
+                    product.Id, product.Name, product.Price, DateTime.UtcNow
+                    ));
             }
 
             await cache.RemoveAsync("products:all", cancellationToken);
