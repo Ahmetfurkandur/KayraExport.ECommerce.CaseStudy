@@ -35,7 +35,7 @@ namespace ProductService.Application.Features.Products.Commands.CreateProductCom
 
             if (result > 0)
             {
-                logger.LogInformation("Product {Id} added successfully", product);
+                logger.LogInformation("Product {Id} added successfully", product); // TODO: event fırlat
             }
 
             await cache.RemoveAsync("products:all", cancellationToken);

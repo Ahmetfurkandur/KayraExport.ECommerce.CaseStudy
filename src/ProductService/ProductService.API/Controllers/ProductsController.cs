@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Features.Products.Commands.CreateProductCommand;
+using ProductService.Application.Features.Products.Commands.UpdateProductCommand;
 using ProductService.Application.Features.Products.Queries.ListProductsQuery;
 
 namespace ProductService.API.Controllers
@@ -27,7 +28,7 @@ namespace ProductService.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Policy = "manager")] //Ürünleri yalnızca admin ve manager rolüne sahip olanlar ekleyebilir
+        [Authorize(Policy = "manager")] //Ürünleri yalnızca admin veya manager rolüne sahip olanlar ekleyebilir
         public async Task<IActionResult> CreateProduct(CreateProductCommandRequest createProductCommandRequest)
         {
             return Ok(await mediator.Send(createProductCommandRequest));
@@ -39,6 +40,17 @@ namespace ProductService.API.Controllers
         public async Task<IActionResult> GetAllProducts()
         {
             return Ok(await mediator.Send(new ListProductsQueryRequest()));
+        }
+
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Policy = "manager")] //Ürünleri yalnızca admin veya manager rolüne sahip olanlar güncelleyebilir
+        public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductCommandRequest updateProductCommandRequest)
+        {
+            updateProductCommandRequest.Id = id;
+            return Ok(await mediator.Send(updateProductCommandRequest));
         }
     }
 }
