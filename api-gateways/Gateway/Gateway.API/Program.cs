@@ -37,12 +37,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//Policy based authorization
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("admin", policy => policy.RequireRole("ADMIN"));
-    options.AddPolicy("manager", policy => policy.RequireRole("MANAGER", "ADMIN"));
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,12 +49,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/auth/v1/swagger.json", "Auth Service");
+        options.SwaggerEndpoint("/swagger/product/v1/swagger.json", "Product Service");
         options.RoutePrefix = "swagger"; // Gateway'de /swagger adresinden erişim
     });
 }
 
 app.UseAuthentication();
-app.UseAuthorization();
+
+
 app.UseRateLimiter();
 app.MapReverseProxy();
 

@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace AuthService.API.Filters
+namespace Common
 {
     /// <summary>
     /// Sadece [Authorize] attribute bulunan endpointlere SwaggerUI'da kilit ikonu gösterir

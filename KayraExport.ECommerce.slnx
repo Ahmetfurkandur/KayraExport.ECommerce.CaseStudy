@@ -3,7 +3,9 @@
   <Folder Name="/api-gateways/Gateway/">
     <Project Path="api-gateways/Gateway/Gateway.API/Gateway.API.csproj" Id="8d7d63c6-9602-4d48-9cb3-f354218efa7a" />
   </Folder>
-  <Folder Name="/building-blocks/" />
+  <Folder Name="/building-blocks/">
+    <Project Path="building-blocks/Common/Common.csproj" Id="2e8a3bff-8f3c-49f0-bc8a-827582b6e236" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".env" />
     <File Path=".env.example" />
