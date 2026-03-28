@@ -1,9 +1,9 @@
 ﻿using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
+using ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
 
 namespace AuthService.Application.Features.Users.Commands.RegisterUserCommand
 {
@@ -22,13 +22,17 @@ namespace AuthService.Application.Features.Users.Commands.RegisterUserCommand
 
         public async Task<RegisterUserCommandResponse> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
         {
-            if (await userManager.FindByEmailAsync(request.Email) is not null)
-                throw new InvalidOperationException($"{request.Email} adresi zaten kullanılıyor!");
 
-            if (await userManager.FindByNameAsync(request.FullName) is not null)
-            {
-                throw new ValidationException($"{request.FullName} kullanıcı adı zaten kullanılıyor!");
-            }
+            ErrorBuilder.Create(409)
+                .WithTitle("Mail Zaten Kullanılıyor")
+                .WithDescription($"{request.Email} adresi zaten kullanılıyor!")
+                .ThrowIfNotNull(await userManager.FindByEmailAsync(request.Email));
+
+            ErrorBuilder.Create(409)
+                .WithTitle("Kullanıcı Adı Zaten Kullanılıyor")
+                .WithDescription($"{request.FullName} kullanıcı adı zaten kullanılıyor!")
+                .ThrowIfNotNull(await userManager.FindByNameAsync(request.FullName));
+
 
             var user = new AppUser
             {
@@ -38,8 +42,10 @@ namespace AuthService.Application.Features.Users.Commands.RegisterUserCommand
 
             var result = await userManager.CreateAsync(user, request.Password);
 
-            if (!result.Succeeded)
-                throw new ValidationException(result.Errors.First().Description);
+            ErrorBuilder.Create(400)
+                .WithTitle("Hatalı Girdi")
+                .WithDescription(result.Errors.First().Description)
+                .ThrowIf(!result.Succeeded);
 
             await userManager.AddToRoleAsync(user, "USER");
 

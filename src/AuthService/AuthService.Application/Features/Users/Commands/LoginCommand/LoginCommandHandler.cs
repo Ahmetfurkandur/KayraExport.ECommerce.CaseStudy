@@ -1,10 +1,10 @@
 ﻿using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
+using ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Security.Authentication;
 
 namespace AuthService.Application.Features.Users.Commands.LoginCommand
 {
@@ -27,18 +27,18 @@ namespace AuthService.Application.Features.Users.Commands.LoginCommand
             // Mail kontrolü
             var user = await userManager.FindByEmailAsync(request.Email);
 
-            if (user is null)
-            {
-                throw new AuthenticationException("Yanlış email adresi!");
-            }
+            ErrorBuilder.Create(401)
+                .WithTitle("Yanlış Email Adresi")
+                .WithDescription("Email adresi alanı yanlıştır. Lütfen girmiş olduğunuz email adresinizi kontrol ediniz.")
+                .ThrowIfNull(user);
 
             //Parola kontrolü
             var isPasswordValid = await userManager.CheckPasswordAsync(user, request.Password);
 
-            if (!isPasswordValid)
-            {
-                throw new AuthenticationException("Yanlış parola!");
-            }
+            ErrorBuilder.Create(401)
+                .WithTitle("Yanlış Parola")
+                .WithDescription("Parolanız yanlıştır. Lütfen girmiş olduğunuz email adresinizi kontrol ediniz.")
+                .ThrowIf(!isPasswordValid);
 
             var roles = await userManager.GetRolesAsync(user);
 

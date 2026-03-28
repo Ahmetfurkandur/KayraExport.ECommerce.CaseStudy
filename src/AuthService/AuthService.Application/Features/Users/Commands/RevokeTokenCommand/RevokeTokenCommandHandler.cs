@@ -1,4 +1,5 @@
 ﻿using AuthService.Domain.Entities;
+using ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,19 +22,22 @@ namespace AuthService.Application.Features.Users.Commands.RevokeTokenCommand
         {
             var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken && request.RefreshTokenExpiry > DateTime.UtcNow, cancellationToken);
 
-            if (user == null)
-            {
-                throw new KeyNotFoundException("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.");
-            }
+            //user nullsa veya refresh token yoksa
+            ErrorBuilder.Create(401)
+                    .WithTitle("Geçersiz Oturum")
+                    .WithDescription("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.")
+                    .ThrowIf(user is null || string.IsNullOrEmpty(user.RefreshToken));
 
-            user.RevokeRefreshToken();
+
+            user!.RevokeRefreshToken();
 
             var result = await userManager.UpdateAsync(user);
 
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException("Çıkış yapma işlemi başarısız. Lütfen daha sonra tekrar deneyiniz.");
-            }
+            //!result.Succeeded durumunda
+            ErrorBuilder.Create(401)
+                    .WithTitle("Çıkış Başarısız")
+                    .WithDescription("Çıkış yapma işlemi başarısız. Lütfen daha sonra tekrar deneyiniz.")
+                    .ThrowIf(!result.Succeeded);
 
             logger.LogInformation(
                     "Refresh token revoked successfully for user {UserId}.",

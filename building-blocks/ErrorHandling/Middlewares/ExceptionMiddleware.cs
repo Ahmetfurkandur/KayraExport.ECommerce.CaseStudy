@@ -55,6 +55,12 @@ namespace ErrorHandling.Middlewares
                     errorCode = "CONFLICT";
                     break;
 
+                case UnauthorizedException:
+                    code = HttpStatusCode.Unauthorized;
+                    logLevel = LogLevel.Warning;
+                    errorCode = "UNAUTHORIZED";
+                    break;
+
                 case UnauthorizedAccessException:
                     code = HttpStatusCode.Unauthorized;
                     logLevel = LogLevel.Warning;

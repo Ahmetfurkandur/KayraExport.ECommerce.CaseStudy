@@ -1,11 +1,11 @@
 ﻿using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
+using ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace AuthService.Application.Features.Users.Commands.RenewAccessTokenCommand
 {
@@ -28,12 +28,10 @@ namespace AuthService.Application.Features.Users.Commands.RenewAccessTokenComman
         {
             var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken && request.RefreshTokenExpiry > DateTime.UtcNow, cancellationToken: cancellationToken);
 
-
-
-            if (user is null || string.IsNullOrEmpty(user.RefreshToken))
-            {
-                throw new SecurityTokenException("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.");
-            }
+            ErrorBuilder.Create(401)
+                    .WithTitle("Geçersiz Oturum")
+                    .WithDescription("Geçersiz veya süresi dolmuş oturum. Lütfen tekrar giriş yapınız.")
+                    .ThrowIf(user is null || string.IsNullOrEmpty(user.RefreshToken));
 
             var roles = await userManager.GetRolesAsync(user);
 

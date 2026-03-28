@@ -37,7 +37,6 @@ namespace ErrorHandling
                 403 => throw new ForbiddenException("ERISIM ENGELLENDI", [errorDetail]),
                 404 => throw new NotFoundException("KAYIT BULUNAMADI", [errorDetail]),
                 409 => throw new ConflictException("CATISMA HATASI", [errorDetail]),
-                429 => throw new TooManyRequestsException("ISTEK LIMITI ASILDI", [errorDetail]),
                 _ => throw new BadRequestException("HATALI ISTEK", [errorDetail])
             };
         }
@@ -50,9 +49,18 @@ namespace ErrorHandling
             return this;
         }
 
-        public ErrorBuilder ThrowIfNull(object condition) // null ise fırlatmak için
+        public ErrorBuilder ThrowIfNull(object? condition) // null ise fırlatmak için
         {
             if (condition is null)
+            {
+                return Throw();
+            }
+            return this;
+        }
+
+        public ErrorBuilder ThrowIfNotNull(object? condition) // null değilse fırlatmak için
+        {
+            if (condition is not null)
             {
                 return Throw();
             }

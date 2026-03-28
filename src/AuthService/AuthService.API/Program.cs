@@ -5,6 +5,7 @@ using AuthService.Infrastructure;
 using AuthService.Infrastructure.Contexts;
 using AuthService.Infrastructure.Persistence;
 using Common;
+using ErrorHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -95,6 +96,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("manager", policy => policy.RequireRole("MANAGER", "ADMIN"));
 });
 
+builder.Services.AddExceptionMiddleware();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -134,6 +137,8 @@ app.UseSerilogRequestLogging(options =>
 });
 
 app.UseAuthorization();
+
+app.UseExceptionMiddleware();
 
 app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 {
