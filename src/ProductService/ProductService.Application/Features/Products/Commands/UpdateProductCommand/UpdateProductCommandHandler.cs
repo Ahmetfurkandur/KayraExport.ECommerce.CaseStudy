@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using ErrorHandling;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -27,11 +28,14 @@ namespace ProductService.Application.Features.Products.Commands.UpdateProductCom
         {
             var product = await queryRepository.GetByIdAsync(request.Id);
 
-            if (product == null)
-            {
-                throw new KeyNotFoundException("Güncellenecek ürün sistemde bulunamadı.");
-            }
+            //product null ise
+            ErrorBuilder.Create(404)
+                    .WithTitle("Ürün Bulunamadı")
+                    .WithDescription("Güncellemekte olduğunuz ürün sistemde bulunamadı.")
+                    .ThrowIfNull(product);
 
+
+            //Change Tracker ile güncelleme işlemi
             product.Name = request.Name;
             product.Description = request.Description;
             product.Price = request.Price;

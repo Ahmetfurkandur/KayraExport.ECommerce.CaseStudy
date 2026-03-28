@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Common;
+using ErrorHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -71,6 +72,8 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddControllers();
 
+builder.Services.AddExceptionMiddleware();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -135,6 +138,8 @@ app.UseSerilogRequestLogging(options =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseExceptionMiddleware();
 
 app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 {
