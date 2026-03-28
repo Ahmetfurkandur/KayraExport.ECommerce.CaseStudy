@@ -112,6 +112,7 @@ services:
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_ACCESS_EXPIRY_MIN=${JWT_ACCESS_EXPIRY_MIN}
       - JWT_REFRESH_EXPIRY_DAYS=${JWT_REFRESH_EXPIRY_DAYS}
+      - Seq__ServerUrl=${SEQ_SERVER_URL}
 
     networks:
       - backend_net
@@ -143,11 +144,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ProductDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
-      - Redis__ConnectionString=redis:6379,password=${REDIS_PASSWORD},ssl=False,abortConnect=False
+      - Redis__ConnectionString=redis:${REDIS_PORT},password=${REDIS_PASSWORD},ssl=False,abortConnect=False
       - RabbitMQ__Host=rabbitmq
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - RabbitMQ__Port=5672
+      - Seq__ServerUrl=${SEQ_SERVER_URL}
     networks:
       - backend_net
     depends_on:
@@ -184,7 +186,7 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=LogDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__Port=5672
-      - Seq__ServerUrl=http://seq:5341
+      - Seq__ServerUrl=${SEQ_SERVER_URL}
     networks:
       - backend_net
     depends_on:
