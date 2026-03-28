@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/building-blocks/">
     <Project Path="building-blocks/Common/Common.csproj" Id="2e8a3bff-8f3c-49f0-bc8a-827582b6e236" />
+    <Project Path="building-blocks/ErrorHandling/ErrorHandling.csproj" Id="63ef210f-0c1b-4b42-a8ff-1d24e4e5b441" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".env" />
