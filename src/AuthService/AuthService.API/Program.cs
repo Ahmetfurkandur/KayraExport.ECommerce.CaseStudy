@@ -66,7 +66,7 @@ builder.Services.AddHealthChecks()
     .AddDbContextCheck<AuthDbContext>("auth-db")
     .AddCheck("auth-identity", () =>
     {
-        // Auth servisinin ayakta olup olmad���n� kontrol eder
+        // Auth servisinin ayakta olup olmadığını kontrol eder
         return HealthCheckResult.Healthy("Auth service is running.");
     });
 

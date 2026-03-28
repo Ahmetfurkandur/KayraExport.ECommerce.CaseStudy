@@ -20,8 +20,8 @@ namespace ProductService.Infrastructure
                 {
                     cfg.Host(configuration["RabbitMQ:Host"], "/", h =>
                     {
-                        h.Username(configuration["RABBITMQ_USER"]);
-                        h.Password(configuration["RABBITMQ_PASSWORD"]);
+                        h.Username(configuration["RABBITMQ_USER"]!);
+                        h.Password(configuration["RABBITMQ_PASSWORD"]!);
                     });
                 });
             });

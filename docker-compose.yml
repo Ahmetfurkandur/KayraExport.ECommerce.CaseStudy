@@ -80,7 +80,7 @@ services:
       auth-service:
         condition: service_healthy
       product-service:
-        condition: service_started
+        condition: service_healthy
       log-service:
         condition: service_started
     healthcheck:
@@ -145,6 +145,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ProductDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - Redis__ConnectionString=redis:${REDIS_PORT},password=${REDIS_PASSWORD},ssl=False,abortConnect=False
+      - ConnectionStrings__RabbitMQ=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
       - RabbitMQ__Host=rabbitmq
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
@@ -159,12 +160,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 5
-    #   start_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   # ---------------------------------------------------------------------------
   # LOG MICROSERVICE

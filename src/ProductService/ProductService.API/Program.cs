@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProductService.Application;
 using ProductService.Infrastructure;
+using ProductService.Infrastructure.Contexts;
+using RabbitMQ.Client;
 using Serilog;
 using System.Text;
 
@@ -45,7 +47,27 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ProductDbContext>("product-db")
+    .AddRedis(
+        builder.Configuration["Redis:ConnectionString"]!,
+        name: "product-redis",
+        tags: new[] { "backing-service" })
+    .AddRabbitMQ(
+        f =>
+        {
+            var factory = new ConnectionFactory()
+            {
+                HostName = builder.Configuration["RabbitMQ:Host"]!,
+                UserName = builder.Configuration["RABBITMQ_USER"]!,
+                Password = builder.Configuration["RABBITMQ_PASSWORD"]!,
+                Port = Convert.ToInt32(builder.Configuration["RabbitMQ:Port"])
+            };
+
+            return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+        },
+        name: "product-rabbitmq",
+        tags: new[] { "backing-service" });
 
 builder.Services.AddControllers();
 
