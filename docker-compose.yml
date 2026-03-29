@@ -186,6 +186,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=LogDb;User Id=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True
       - Seq__ServerUrl=http://seq:80/
+      - Seq__ApiUrl=${SEQ_SERVER_URL}
       - Seq__ApiKey=${SEQ_API_KEY}
     networks:
       - backend_net
