@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\building-blocks\ErrorHandling\ErrorHandling.csproj" />
     <ProjectReference Include="..\LogService.Domain\LogService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
   </ItemGroup>
 
 </Project>

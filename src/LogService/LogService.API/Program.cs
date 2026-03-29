@@ -1,14 +1,37 @@
+using Asp.Versioning;
+using ErrorHandling;
+using LogService.Application;
+using LogService.Infrastructure;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+
 builder.Services.AddHealthChecks();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddExceptionMiddleware();
 
 var app = builder.Build();
 
@@ -52,6 +75,8 @@ app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 .WithName("AuthHealthCheck")
 .WithTags("Health")
 .AllowAnonymous();
+
+app.UseExceptionMiddleware();
 
 app.MapControllers();
 
