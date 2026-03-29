@@ -71,6 +71,7 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/auth/v1/swagger.json", "Auth Service");
         options.SwaggerEndpoint("/swagger/product/v1/swagger.json", "Product Service");
+        options.SwaggerEndpoint("/swagger/log/v1/swagger.json", "Log Service");
         options.RoutePrefix = "swagger"; // Gateway'de /swagger adresinden erişim
     });
 }
