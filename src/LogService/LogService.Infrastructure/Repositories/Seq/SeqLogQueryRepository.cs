@@ -36,27 +36,31 @@ namespace LogService.Infrastructure.Repositories.Seq
 
         }
 
-        public async Task<IReadOnlyList<LogEntry>> GetLogsAsync(LogQueryFilterDto filter, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<LogEntry>> GetLogsAsync(LogQueryFilterDto? filter, CancellationToken cancellationToken = default)
         {
-            var queryParams = new List<string>
-        {
-            $"count={filter.Count}",
-            $"render={filter.Render.ToString().ToLower()}"
-        };
+            var queryParams = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(filter.Filter))
+            //url'ye filtre parametreleri ekleme
+
+            if (filter?.Count is not null)
+                queryParams.Add($"count={filter?.Count}");
+
+            if (!string.IsNullOrWhiteSpace(filter?.Filter))
                 queryParams.Add($"filter={Uri.EscapeDataString(filter.Filter)}");
 
-            if (!string.IsNullOrWhiteSpace(filter.AfterId))
+            if (filter?.Render == true)
+                queryParams.Add($"render={Uri.EscapeDataString(filter!.Render.ToString().ToLower())}");
+
+            if (!string.IsNullOrWhiteSpace(filter?.AfterId))
                 queryParams.Add($"afterId={Uri.EscapeDataString(filter.AfterId)}");
 
-            if (filter.FromDateUtc.HasValue)
-                queryParams.Add($"fromDateUtc={filter.FromDateUtc.Value.UtcDateTime:O}");
+            if (filter?.FromDateUtc.HasValue == true)
+                queryParams.Add($"fromDateUtc={filter?.FromDateUtc.Value.UtcDateTime:O}");
 
-            if (filter.ToDateUtc.HasValue)
-                queryParams.Add($"toDateUtc={filter.ToDateUtc.Value.UtcDateTime:O}");
+            if (filter?.ToDateUtc.HasValue == true)
+                queryParams.Add($"toDateUtc={filter?.ToDateUtc.Value.UtcDateTime:O}");
 
-            var url = $"/api/events?{string.Join("&", queryParams)}";
+            var url = queryParams.Count > 0 ? $"api/events?{string.Join("&", queryParams)}" : "api/events";
 
             var response = await client.GetAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();

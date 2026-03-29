@@ -12,9 +12,8 @@ namespace LogService.Infrastructure
             services.AddHttpClient<ILogQueryRepository, SeqLogQueryRepository>(client =>
             {
                 client.BaseAddress = new Uri(configuration["Seq:ServerUrl"]!);
+                client.DefaultRequestHeaders.Add("X-Seq-ApiKey", configuration["Seq:ApiKey"]);
             });
-
-            services.AddScoped<ILogQueryRepository, SeqLogQueryRepository>();
         }
     }
 }

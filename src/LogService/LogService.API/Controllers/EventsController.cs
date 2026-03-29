@@ -28,7 +28,7 @@ namespace LogService.API.Controllers
             return Ok(await mediator.Send(request));
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEventById([FromRoute] string id)

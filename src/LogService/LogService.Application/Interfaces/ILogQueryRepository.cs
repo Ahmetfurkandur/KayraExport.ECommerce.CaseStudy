@@ -8,7 +8,7 @@ namespace LogService.Application.Interfaces
     /// </summary>
     public interface ILogQueryRepository
     {
-        Task<IReadOnlyList<LogEntry>> GetLogsAsync(LogQueryFilterDto filter, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<LogEntry>> GetLogsAsync(LogQueryFilterDto? filter, CancellationToken cancellationToken = default);
         Task<LogEntry?> GetLogByIdAsync(string eventId, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<DashboardEntry>> GetDashboardsAsync(
     CancellationToken cancellationToken = default);
