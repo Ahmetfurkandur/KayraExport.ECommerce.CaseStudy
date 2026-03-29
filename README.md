@@ -4,7 +4,7 @@ Mikroservis tabanlı e-ticaret backend uygulaması.
 
 **Teknolojiler:** .NET 8, Onion Architecture, CQRS/MediatR, ASP.NET Core Identity + JWT, YARP API Gateway, MassTransit + RabbitMQ, Redis, SQL Server, Serilog + Seq, Docker Compose
 
-**Kod Deposu:** [GitHub — KayraExport.ECommerce](<repository-url>)
+**Kod Deposu:** [GitHub — KayraExport.ECommerce.CaseStudy](https://github.com/Ahmetfurkandur/KayraExport.ECommerce.CaseStudy)
 
 ---
 
