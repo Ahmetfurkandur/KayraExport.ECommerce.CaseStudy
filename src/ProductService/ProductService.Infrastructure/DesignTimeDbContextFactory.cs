@@ -16,7 +16,7 @@ namespace ProductService.Infrastructure
             // 2. Yapılandırma oluştur (appsettings + environment variables)
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(path)
-                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.Development.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
 

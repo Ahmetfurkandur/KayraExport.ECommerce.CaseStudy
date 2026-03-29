@@ -13,6 +13,14 @@ services:
     healthcheck:
       disable: true
 
+  product-service:
+    healthcheck:
+      disable: true
+
+  log-service:
+    healthcheck:
+      disable: true
+
   api-gateway:
     healthcheck:
       disable: true

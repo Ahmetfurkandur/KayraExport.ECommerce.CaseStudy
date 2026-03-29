@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Common;
 using ErrorHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -174,5 +175,11 @@ app.MapGet("/health", async (HealthCheckService healthCheckService) =>
 .AllowAnonymous();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
